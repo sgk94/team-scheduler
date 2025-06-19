@@ -34,4 +34,6 @@ A minimal, production-ready starter kit with Firebase Authentication (Email/Pass
 
    ```bash
    npm install
+
+   npm run dev
    ```
