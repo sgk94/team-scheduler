@@ -1,16 +1,20 @@
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const auth = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       await auth.login(email, password);
+      debugger;
+      navigate("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -22,6 +26,8 @@ export default function Login() {
         onSubmit={handleSubmit}
         className="max-w-sm mx-auto mt-12 p-4 border rounded space-y-4"
       >
+        <h2 className="text-xl font-semibold">Log In</h2>
+
         <input
           type="email"
           value={email}
