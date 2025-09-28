@@ -7,7 +7,7 @@ export default function Schedule() {
       <div className="flex flex-row place-content-between">
         <h1 className="text-neutral-700">Hey Shawn you're serving</h1>
         <Link
-          to="/rotations"
+          to="/rotations/create"
           className="rounded-md px-4 py-1 bg-blue-700 text-neutral-100"
         >
           Schedule Now

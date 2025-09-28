@@ -4,16 +4,25 @@ import {
   sendPasswordResetEmail,
   signOut,
   onAuthStateChanged,
+  updateProfile,
 } from "firebase/auth";
-import type { User } from "firebase/auth";
+import type { User, UserCredential } from "firebase/auth";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { auth } from "../firebase/config";
+import { auth, db } from "../firebase/config";
 import { AuthContext } from "./AuthContext"; // 👈 import context
 import type { AuthContextType } from "./AuthContext";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 type Props = {
   children: ReactNode;
+};
+
+type RegisterWithProfileInput = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
 };
 
 export function AuthProvider({ children }: Props) {
@@ -34,6 +43,42 @@ export function AuthProvider({ children }: Props) {
   const register = (email: string, password: string) =>
     createUserWithEmailAndPassword(auth, email, password);
 
+  const registerWithProfile = async ({
+    email,
+    password,
+    firstName,
+    lastName,
+  }: RegisterWithProfileInput): Promise<void> => {
+    const cred: UserCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    const displayName = `${firstName} ${lastName}`.replace(/\s+/g, " ").trim();
+    if (displayName) {
+      await updateProfile(cred.user, { displayName });
+    }
+
+    await setDoc(
+      doc(db, "users", cred.user.uid),
+      {
+        firstName,
+        lastName,
+        displayName: displayName || (cred.user.email ?? "User"),
+        displayNameLower: (displayName || cred.user.email || "user")
+          .toString()
+          .toLowerCase(),
+        email,
+        photoURL: cred.user.photoURL ?? null,
+        role: "member", // default; elevate later via Admin SDK/claims
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+  };
+
   const resetPassword = (email: string) => sendPasswordResetEmail(auth, email);
 
   const logout = () => signOut(auth);
@@ -44,6 +89,7 @@ export function AuthProvider({ children }: Props) {
     login,
     register,
     resetPassword,
+    registerWithProfile,
     logout,
   };
 

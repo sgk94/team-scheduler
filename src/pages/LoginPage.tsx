@@ -2,7 +2,7 @@ import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function LoginPage() {
   const auth = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,7 +13,6 @@ export default function Login() {
 
     try {
       await auth.login(email, password);
-      debugger;
       navigate("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);

@@ -4,28 +4,29 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import DashboardPage from "./pages/DashboardPage";
 import PrivateRoute from "./routes/PrivateRoute";
 import AppLayout from "./components/AppLayout";
-import Vacation from "./pages/Vacation";
-import Members from "./pages/Members";
-import Rotations from "./pages/Rotations";
+import VacationPage from "./pages/VacationPage";
+import MembersPage from "./pages/MembersPage";
+import UpsertRotationsPage from "./pages/UpsertRotationsPage";
+import RotationsPage from "./pages/RotationsPage";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
         <Route element={<AppLayout />}>
           <Route
             path="dashboard"
             element={
               <PrivateRoute>
-                <Dashboard />
+                <DashboardPage />
               </PrivateRoute>
             }
           />
@@ -33,7 +34,7 @@ function App() {
             path="vacation"
             element={
               <PrivateRoute>
-                <Vacation />
+                <VacationPage />
               </PrivateRoute>
             }
           />
@@ -41,15 +42,25 @@ function App() {
             path="members"
             element={
               <PrivateRoute>
-                <Members />
+                <MembersPage />
               </PrivateRoute>
             }
           />
+
           <Route
             path="rotations"
             element={
               <PrivateRoute>
-                <Rotations />
+                <RotationsPage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="rotations/create"
+            element={
+              <PrivateRoute>
+                <UpsertRotationsPage />
               </PrivateRoute>
             }
           />

@@ -1,6 +1,6 @@
 import Schedule from "../components/Schedule";
 
-export default function Dashboard() {
+export default function DashboardPage() {
   return (
     <>
       <Schedule />
