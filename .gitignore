@@ -23,6 +23,16 @@ dist-ssr
 *.sln
 *.sw?
 
+# Secrets (never commit service keys)
+secrets/
+secrets/serviceAccount.json
+
+# extra safety if a key ever lands elsewhere
+**/serviceAccount*.json
+*.p12
+*.pem
+*.key
+
 # Ignore environment files
 .env
 .env.*.local
