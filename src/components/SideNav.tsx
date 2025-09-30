@@ -1,4 +1,4 @@
-import { Outlet, useNavigate, useLocation, NavLink } from "react-router-dom";
+import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
   CircleUser,
@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 export default function SideNav() {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -23,13 +23,13 @@ export default function SideNav() {
   };
 
   return (
-    <aside className="h-dvh w-full flex flex-col bg-stone-50 px-1">
-      <h1 className="font-bold p-2">Team Scheduler</h1>
-      <div className="flex-1 flex flex-col gap-2">
+    <aside className="h-dvh w-full flex flex-col px-1">
+      <h1 className="font-bold px-2 py-4">Team Scheduler</h1>
+      <div className="flex-1 flex flex-col gap-1">
         <NavLink
           to="dashboard"
-          className={`cursor-pointer text-neutral-700 flex gap-2 rounded-md p-2 ${
-            location.pathname.startsWith("/dashboard") ? "bg-stone-200" : ""
+          className={`cursor-pointer text-neutral-700 flex gap-2 rounded-md p-2 border hover:border-slate-400 ${
+            location.pathname.startsWith("/dashboard") ? "bg-slate-200" : ""
           }`}
         >
           <HouseHeart />
@@ -37,8 +37,8 @@ export default function SideNav() {
         </NavLink>
         <NavLink
           to="vacation"
-          className={`cursor-pointer text-neutral-700 flex gap-2 rounded-md p-2 ${
-            location.pathname.startsWith("/vacation") ? "bg-stone-200" : ""
+          className={`cursor-pointer text-neutral-700 flex gap-2 rounded-md p-2 border hover:border-slate-400 ${
+            location.pathname.startsWith("/vacation") ? "bg-slate-200" : ""
           }`}
         >
           <TreePalm />
@@ -46,8 +46,8 @@ export default function SideNav() {
         </NavLink>
         <NavLink
           to="members"
-          className={`cursor-pointer text-neutral-700 flex gap-2 rounded-md p-2 ${
-            location.pathname.startsWith("/members") ? "bg-stone-200" : ""
+          className={`cursor-pointer text-neutral-700 flex gap-2 rounded-md p-2 border hover:border-slate-400 ${
+            location.pathname.startsWith("/members") ? "bg-slate-200" : ""
           }`}
         >
           <Users />
@@ -55,8 +55,8 @@ export default function SideNav() {
         </NavLink>
         <NavLink
           to="rotations"
-          className={`cursor-pointer text-neutral-700 flex gap-2 rounded-md p-2 ${
-            location.pathname.startsWith("/rotations") ? "bg-stone-200" : ""
+          className={`cursor-pointer text-neutral-700 flex gap-2 rounded-md p-2 border hover:border-slate-400 ${
+            location.pathname.startsWith("/rotations") ? "bg-slate-200" : ""
           }`}
         >
           <ClipboardClock />
@@ -69,7 +69,7 @@ export default function SideNav() {
           <CircleUser />
         </span>
         <button
-          className="rounded-md px-4 py-1 bg-blue-700 text-neutral-100"
+          className="rounded-md px-4 py-1 bg-blue-700 hover:bg-blue-800 text-neutral-100"
           onClick={handleLogout}
         >
           log out

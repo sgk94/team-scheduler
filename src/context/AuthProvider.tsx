@@ -18,11 +18,23 @@ type Props = {
   children: ReactNode;
 };
 
+const INSTRUMENTS = [
+  "lead",
+  "acoustic",
+  "keys",
+  "drums",
+  "electric",
+  "bgv",
+  "violin",
+] as const;
+type Instrument = (typeof INSTRUMENTS)[number];
+
 type RegisterWithProfileInput = {
   email: string;
   password: string;
   firstName: string;
   lastName: string;
+  instruments?: Instrument[];
 };
 
 export function AuthProvider({ children }: Props) {
@@ -40,14 +52,15 @@ export function AuthProvider({ children }: Props) {
   const login = (email: string, password: string) =>
     signInWithEmailAndPassword(auth, email, password);
 
-  const register = (email: string, password: string) =>
-    createUserWithEmailAndPassword(auth, email, password);
+  // const register = (email: string, password: string) =>
+  //   createUserWithEmailAndPassword(auth, email, password);
 
   const registerWithProfile = async ({
     email,
     password,
     firstName,
     lastName,
+    instruments = [],
   }: RegisterWithProfileInput): Promise<void> => {
     const cred: UserCredential = await createUserWithEmailAndPassword(
       auth,
@@ -65,6 +78,10 @@ export function AuthProvider({ children }: Props) {
       {
         firstName,
         lastName,
+        active: true,
+        instruments: instruments.map((instrument) =>
+          instrument.toLowerCase()
+        ) as Instrument[],
         displayName: displayName || (cred.user.email ?? "User"),
         displayNameLower: (displayName || cred.user.email || "user")
           .toString()
@@ -87,7 +104,6 @@ export function AuthProvider({ children }: Props) {
     user,
     loading,
     login,
-    register,
     resetPassword,
     registerWithProfile,
     logout,
