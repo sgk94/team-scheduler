@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   collection,
@@ -11,6 +11,7 @@ import {
 import type { DocumentData } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { useAuth } from "../context/AuthContext";
+import { ChevronDown } from "lucide-react";
 
 type Rotation = {
   date: any; // Firestore Timestamp
@@ -22,6 +23,8 @@ export default function Schedule() {
   const { user } = useAuth();
   const [rotations, setRotations] = useState<(Rotation & { id: string })[]>([]);
   const [error, setError] = useState<Error | null>(null);
+  const [openSet, setOpenSet] = useState<Set<string>>(new Set());
+  const firstFour = rotations.slice(0, 4);
 
   useEffect(() => {
     if (!user?.uid) {
@@ -68,14 +71,21 @@ export default function Schedule() {
       .map(([role]) => role)
       .join(", ");
 
+  const toggle = (id: string) =>
+    setOpenSet((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+
   return (
     <>
       <div className="flex flex-row place-content-between items-end mb-3">
         <h1 className="text-neutral-700">
-          Hey {user?.displayName ?? "there"}, you're serving
+          Hey {user?.displayName ?? "there"}, you're scheduled to serve
         </h1>
         <Link
-          to="/rotations/create"
+          to="/schedule/create"
           className="rounded-md px-4 py-1 bg-blue-700 text-neutral-100"
         >
           Schedule Now
@@ -85,25 +95,61 @@ export default function Schedule() {
       {error && <p className="text-red-600">Error: {error.message}</p>}
 
       <ul className="space-y-2">
-        {rotations.length === 0 && (
-          <li className="text-neutral-500">No upcoming rotations</li>
-        )}
-        {rotations.map((r) => (
-          <li
-            key={r.id}
-            className="rounded-md bg-white/60 p-3 border border-neutral-200"
-          >
-            <div className="font-medium">
-              {fmtDate(r.date)}{" "}
-              {myRoles(r, user?.uid) && (
-                <>
-                  • <span className="capitalize">{myRoles(r, user?.uid)}</span>
-                </>
-              )}
-            </div>
-            <div className="text-sm text-neutral-600">Rotation ID: {r.id}</div>
-          </li>
-        ))}
+        {firstFour.map((rotation) => {
+          const isOpen = openSet.has(rotation.id);
+          return (
+            <li
+              key={rotation.id}
+              className="rounded-md overflow-hidden border border-neutral-200 bg-white/60"
+            >
+              <button
+                type="button"
+                className="w-full text-left p-3 flex items-center justify-between"
+                aria-expanded={isOpen}
+                aria-controls={`panel-${rotation.id}`}
+                id={`acc-${rotation.id}`}
+                onClick={() => toggle(rotation.id)}
+              >
+                <span className="font-medium">
+                  {fmtDate(rotation.date)}{" "}
+                  {myRoles(rotation, user?.uid) && (
+                    <>
+                      •{" "}
+                      <span className="capitalize">
+                        {myRoles(rotation, user?.uid)}
+                      </span>
+                    </>
+                  )}
+                </span>
+                <ChevronDown
+                  className={`transition-transform duration-300 ${
+                    isOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* 👇 No peeking: max-height animation + overflow-hidden */}
+              <div
+                id={`panel-${rotation.id}`}
+                role="region"
+                aria-labelledby={`acc-${rotation.id}`}
+                className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${
+                  isOpen ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
+                }`}
+              >
+                {/* Use padding here; avoid top margins on first child */}
+                <div className="px-3 pb-3 pt-2">
+                  {/* panel content */}
+                  <div className="text-sm text-neutral-700">David: keys</div>
+                  <div className="text-sm text-neutral-700">Chris: BGV</div>
+                  <div className="text-sm text-neutral-700">Will: BGV</div>
+                  <div className="text-sm text-neutral-700">Karino: Violin</div>
+                  <div className="text-sm text-neutral-700">Lucia: Drums</div>
+                </div>
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </>
   );

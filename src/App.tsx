@@ -11,8 +11,8 @@ import PrivateRoute from "./routes/PrivateRoute";
 import AppLayout from "./components/AppLayout";
 import VacationPage from "./pages/VacationPage";
 import MembersPage from "./pages/MembersPage";
-import UpsertRotationsPage from "./pages/UpsertRotationsPage";
-import RotationsPage from "./pages/RotationsPage";
+import UpsertSchedulePage from "./pages/UpsertSchedulePage";
+import ManageSchedulePage from "./pages/ManageSchedulePage";
 
 function App() {
   return (
@@ -48,19 +48,19 @@ function App() {
           />
 
           <Route
-            path="rotations"
+            path="schedule"
             element={
               <PrivateRoute>
-                <RotationsPage />
+                <ManageSchedulePage />
               </PrivateRoute>
             }
           />
 
           <Route
-            path="rotations/create"
+            path="schedule/create"
             element={
               <PrivateRoute>
-                <UpsertRotationsPage />
+                <UpsertSchedulePage />
               </PrivateRoute>
             }
           />

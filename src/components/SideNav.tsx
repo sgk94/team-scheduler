@@ -54,13 +54,15 @@ export default function SideNav() {
           members
         </NavLink>
         <NavLink
-          to="rotations"
+          to="schedule"
           className={`cursor-pointer text-neutral-700 flex gap-2 rounded-md p-2 border hover:border-slate-400 ${
-            location.pathname.startsWith("/rotations") ? "bg-slate-200" : ""
+            location.pathname.startsWith("/manage-schedule")
+              ? "bg-slate-200"
+              : ""
           }`}
         >
           <ClipboardClock />
-          rotations
+          Schedule
         </NavLink>
       </div>
 

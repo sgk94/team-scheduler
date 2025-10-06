@@ -1,3 +1,10 @@
+import Members from "../components/Members";
+
 export default function MembersPage() {
-  return <h1>Members Page</h1>;
+  return (
+    <>
+      <h1>Members</h1>
+      <Members />
+    </>
+  );
 }
