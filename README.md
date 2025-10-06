@@ -1,106 +1,60 @@
-# ⚛️ React + Firebase Auth Starter Kit
+# Team Scheduler
 
-A minimal, production-ready boilerplate for Firebase Authentication (Email/Password) with React, React Router, and Tailwind CSS.  
-Perfect for quickly bootstrapping SaaS apps, dashboards, or membership portals.
+A lightweight web app to schedule a church worship/praise team: manage members and their instruments, rotate teams (A/B or custom), track vacations/unavailability, and surface conflicts before scheduling.
 
----
-
-## 🚀 Features
-
-- 🔐 Firebase Auth (Email/Password)
-- ⚛️ React 19 + TypeScript
-- 🛡 Protected routes with React Router
-- 🌐 Context-based global auth state
-- 🎨 TailwindCSS v3 styling
-- 🔍 Type-safe, minimal, and extensible
-- 🚪 Logout, redirects, and error handling
+> Tech: **React + TypeScript + Vite**, **Firebase Auth + Firestore**, **Tailwind CSS** (optionally Zustand for feature state, React Router for navigation).
 
 ---
 
-## 📦 Tech Stack
+## ✨ Features
 
-- [React 19](https://reactjs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Firebase](https://firebase.google.com/)
-- [React Router v6](https://reactrouter.com/)
-- [Tailwind CSS v3](https://tailwindcss.com/)
-- [Vite](https://vitejs.dev/)
+* **Members**: roster with name + instruments (lead, acoustic, keys, drums, electric, bgv, violin, …).
+* **Scheduling**: create Sunday rotations with per‑instrument assignments; highlight conflicts.
+* **Vacations**: track member unavailability; filter schedule UI to avoid overlap.
+* **Auth & Roles**: Firebase Auth (Email/Password). Admin role via **Custom Claims** controls writes.
+* **Realtime**: Firestore `onSnapshot` updates lists live.
 
----
+Planned / Roadmap:
 
-## 🛠️ Getting Started
-
-1. **Clone or download** the project.
-
-2. **Install dependencies**
-
-   This project uses [Vite](https://vitejs.dev/) — no extra config needed:
-
-   ```bash
-   npm install
-   ```
-
-3. **Set up Firebase**
-
-   - Visit the [Firebase Console](https://console.firebase.google.com/)
-   - Create a new project
-   - Enable **Email/Password** auth under **Authentication → Sign-in method**
-   - Add the following to a `.env` file in your project root:
-
-     ```env
-     VITE_FIREBASE_API_KEY=your-api-key
-     VITE_FIREBASE_AUTH_DOMAIN=your-auth-domain
-     VITE_FIREBASE_PROJECT_ID=your-project-id
-     VITE_FIREBASE_STORAGE_BUCKET=your-storage-bucket
-     VITE_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
-     VITE_FIREBASE_APP_ID=your-app-id
-     ```
-
-4. **Start the local dev server**
-
-   ```bash
-   npm run dev
-   ```
+* ✅ Dashboard view shows list of upcoming rotations
+* ✅ Create and edit rotations
+* ✅ Members list sorted by display name
+* ➡️ Vacation creation + list (upcoming/past) with a shared panel UI
+* ➡️ Conflict detection: block assigning someone who’s on vacation
+* ➡️ Team templates (Team A / Team B quick-apply)
+* ➡️ Availability calendar view
+* ➡️ Notifications (email or SMS) on assignment
+* ➡️ Import/export CSV for members
 
 ---
 
-## 📄 Pages + Features
+## 🧱 Architecture
 
-- `/login` – sign in with email/password
-- `/register` – create a new account
-- `/dashboard` – protected route (redirects if not logged in)
-- `PrivateRoute` – reusable route guard
-- `AuthContext` – global auth state and methods
+* **App shell**: providers (Auth), router, layout
+* **Feature-first** domain folders (vacation, members, schedule). Pages compose feature components.
+* **Data access**: Firestore read/write behind small `api/*` modules.
 
 ---
 
-## 🗂 Folder Structure
+## 🗄️ Data Model (Firestore)
 
-```txt
-src/
-├── context/
-│   ├── AuthContext.tsx
-│   └── AuthProvider.tsx
-├── firebase/
-│   └── config.ts
-├── pages/
-│   ├── Dashboard.tsx
-│   ├── Login.tsx
-│   └── Register.tsx
-├── routes/
-│   └── PrivateRoute.tsx
-├── App.tsx
-```
+**users** (`users/{uid}`)
 
----
+* `displayName: string`
+* `instruments: string[]` (validated against allowed set)
+* `createdAt: Timestamp`
 
-## 📜 License
+**rotations** (`rotations/{id}`)
 
-MIT — free to use for personal and commercial projects.
+* `date: Timestamp`
+* `assignments: { [instrument: string]: { id: string; name: string; key: string } }` (example shape)
+* `assigneeIds: string[]` (for quick `array-contains` queries)
+* `createdBy: string`
 
----
+**vacations** (`vacations/{id}`)
 
-## ✨ Author
-
-Made with 💻 by **sgk94**  
-Feel free to [reach out](mailto:kimsha004@gmail.com) with questions, feedback, or custom requests!
+* `userId: string`
+* `start: Timestamp`
+* `end: Timestamp`
+* `note?: string`
+* `createdBy: string`
