@@ -4,6 +4,10 @@ A lightweight web app to schedule a church worship/praise team: manage members a
 
 > Tech: **React + TypeScript + Vite**, **Firebase Auth + Firestore**, **Tailwind CSS** (optionally Zustand for feature state, React Router for navigation).
 
+Design is not final and is a WIP
+
+<img width="1470" height="793" alt="Screenshot 2025-10-06 at 4 54 34 PM" src="https://github.com/user-attachments/assets/d8456a52-4936-4264-9010-f0bdbfa7797c" />
+
 ---
 
 ## ✨ Features
